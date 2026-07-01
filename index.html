@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Maestro da Revisão - Mandarim</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#121212">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+
+    <header class="app-header">
+        <h1>Maestro da Revisão</h1>
+        <span id="offline-badge" class="badge">Offline Pronto</span>
+    </header>
+
+    <nav class="app-nav">
+        <button class="nav-btn active" data-tab="tab-hoje">Hoje</button>
+        <button class="nav-btn" data-tab="tab-novo">Novo</button>
+        <button class="nav-btn" data-tab="tab-calendario">Calendário</button>
+        <button class="nav-btn" data-tab="tab-gerenciar">Avançado</button>
+        <button class="nav-btn" data-tab="tab-manual">Manual</button>
+    </nav>
+
+    <main class="app-content">
+        <section id="tab-hoje" class="tab-panel active">
+            <h2>Fila de Execução</h2>
+            <div id="lista-hoje" class="items-container">
+                </div>
+            <button id="btn-finalizar" class="btn-primary btn-block container-spacing-top">
+                Finalizar Revisão
+            </button>
+        </section>
+
+        <section id="tab-novo" class="tab-panel">
+            <h2>Novo Agendamento</h2>
+            <form id="form-agendamento" class="app-form">
+                <div class="form-group">
+                    <label>Tipo de Registro</label>
+                    <div class="toggle-container">
+                        <input type="radio" id="type-card" name="item-type" value="card" checked>
+                        <label for="type-card">Card (Fichário)</label>
+                        <input type="radio" id="type-frase" name="item-type" value="frase">
+                        <label for="type-frase">Frase (Caderno)</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label id="label-identificador" for="item-id">Identificador / Nome</label>
+                    <input type="text" id="item-id" required placeholder="Ex: Caixa 1 - Lote 5 ou #12">
+                </div>
+
+                <div class="form-group id-vinculo-group hidden">
+                    <label for="item-vinculo">Vincular a um Card Existente</label>
+                    <select id="item-vinculo">
+                        <option value="">Nenhum vínculo</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="item-nivel">Nível Inicial</label>
+                    <select id="item-nivel">
+                        <option value="1" selected>Nível 1 (1 dia)</option>
+                        <option value="2">Nível 2 (2 dias)</option>
+                        <option value="3">Nível 3 (4 dias)</option>
+                        <option value="4">Nível 4 (7 dias)</option>
+                        <option value="5">Nível 5 (15 dias)</option>
+                        <option value="6">Nível 6 (30 dias)</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-success btn-block">Salvar no Cronograma</button>
+            </form>
+        </section>
+
+        <section id="tab-calendario" class="tab-panel">
+            <h2>Carga de Estudos Futura</h2>
+            <div id="lista-calendario" class="timeline-container">
+                </div>
+        </section>
+
+        <section id="tab-gerenciar" class="tab-panel">
+            <h2>Gerenciamento Avançado</h2>
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="Buscar registros...">
+            </div>
+            <div class="table-responsive">
+                <table class="app-table">
+                    <thead>
+                        <tr>
+                            <th>Identificador</th>
+                            <th>Tipo</th>
+                            <th>Nível</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-gerenciamento">
+                        </tbody>
+                </table>
+            </div>
+
+            <div class="danger-zone container-spacing-top">
+                <h3>Ações Globais</h3>
+                <button id="btn-atualizar-arquivos" class="btn-info btn-block">Atualizar Arquivos (Forçar Reload)</button>
+                <button id="btn-reset-total" class="btn-danger btn-block" style="margin-top: 10px;">Resetar Todo o Progresso</button>
+            </div>
+        </section>
+
+        <section id="tab-manual" class="tab-panel">
+            <h2>📜 Bíblia da Revisão</h2>
+            <div class="manual-content">
+                <div class="manual-card">
+                    <h3>📦 Pilar 1: O Fichário (Vocabulário Isolado)</h3>
+                    <p><strong>Objetivo:</strong> Fixar a leitura e a escrita do caractere (Hanzi) isoladamente.</p>
+                    <ul>
+                        <li><strong>Estrutura:</strong> Caixa física com 6 divisórias numéricas.</li>
+                        <li><strong>Cartão:</strong> Frente contém o Hanzi. Verso contém o Pinyin + Significado.</li>
+                        <li><strong>Ao acertar:</strong> Escreva de 2 a 3 vezes em rascunho de cabeça e avance 1 nível no app/fichário.</li>
+                        <li><strong>Ao errar:</strong> O cartão retorna fisicamente e eletronicamente ao Nível 1.</li>
+                    </ul>
+                </div>
+
+                <div class="manual-card">
+                    <h3>📖 Pilar 2: O Caderno de Frases (Sintaxe)</h3>
+                    <p><strong>Objetivo:</strong> Fixar a aplicação estrutural e gramatical.</p>
+                    <ul>
+                        <li><strong>Estrutura:</strong> Caderno indexado sequencialmente por ID numérico (Ex: #1, #2).</li>
+                        <li><strong>Formato Cloze:</strong> Frase curta contendo lacuna (espaço em branco) na palavra-alvo com tradução em português abaixo.</li>
+                        <li><strong>Ao acertar:</strong> Avança o cronograma da frase.</li>
+                        <li><strong>Ao errar:</strong> O relógio da frase é resetado para o Nível 1, mas o card base continua intacto no nível atual no fichário.</li>
+                    </ul>
+                </div>
+
+                <div class="manual-card highlighted">
+                    <h3>⚡ A Regra de Transição (Nível 3)</h3>
+                    <p>Cards de palavras isoladas <strong>nunca são arquivados no Nível 3</strong>. Eles continuam sua progressão até o Nível 6. No entanto, no exato instante em que um card atinge o Nível 3, ele gera uma frase no caderno físico (5 a 8 caracteres). Você a indexa, escreve o ID dela no verso do cartão físico e passa a rastreá-las em trilhas paralelas.</p>
+                </div>
+
+                <div class="manual-card danger">
+                    <h3>🚨 Tratamento de Falhas</h3>
+                    <p>Se você errar um card base e este retornar ao Nível 1, a frase vinculada a ele no aplicativo entrará em estado <strong>"Em Espera"</strong> e não aparecerá nas listas diárias até que o card base retorne ao Nível 3.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>

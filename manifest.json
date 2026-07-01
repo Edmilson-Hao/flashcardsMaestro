@@ -1,0 +1,16 @@
+{
+  "short_name": "Maestro",
+  "name": "Maestro da Revisão de Mandarim",
+  "icons": [
+    {
+      "src": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='192' height='192' viewBox='0 0 192 192'><rect width='192' height='192' fill='%231f1f1f'/><text x='50%' y='60%' font-size='90' fill='%234caf50' font-family='sans-serif' text-anchor='middle'>中</text></svg>",
+      "type": "image/svg+xml",
+      "sizes": "192x192"
+    }
+  ],
+  "start_url": "./index.html",
+  "background_color": "#121212",
+  "theme-color": "#121212",
+  "display": "standalone",
+  "orientation": "portrait"
+}

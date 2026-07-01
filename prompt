@@ -1,0 +1,140 @@
+# 📑 PROMPT DE DESENVOLVIMENTO: O MAESTRO DA REVISÃO (VERSÃO COMPLETA & MODULAR)
+
+Crie um sistema de gerenciamento de revisão espaçada analógica baseado nos requisitos e regras de negócio abaixo. O sistema deve ser um **Single Page App (SPA)**, estruturado de forma **totalmente modular (ES6 Modules)**, utilizando puramente **HTML5, CSS3 e JavaScript Vanilla (sem frameworks ou bibliotecas de reatividade)**. O sistema deve ser totalmente funcional **offline**, instalável como um **PWA (Progressive Web App)** e salvar todos os dados de progresso localmente via **`localStorage`**.
+
+---
+
+## 🧠 1. REGRAS DE NEGÓCIO & INTEGRAÇÃO COM ARQUIVOS
+
+O aplicativo gerencia dois tipos de entidades independentes com cronogramas paralelos:
+
+1. **Cards de Palavras (Fichário):** Possuem níveis de 1 a 6.
+
+
+2. **Frases (Caderno):** Identificadas por um número de índice (ex: `#12`) e também possuem níveis de 1 a 6.
+
+
+
+### Integração com `palavras.txt`:
+
+* Na raiz do projeto haverá um arquivo chamado `palavras.txt` contendo a lista de palavras em mandarim.
+* **A Regra dos 5 a 8 caracteres:** Ao cadastrar ou sugerir uma nova Frase no sistema, o aplicativo deve validar (ou alertar) se a frase inserida possui estritamente entre **5 e 8 caracteres** no total (contando apenas os caracteres chineses, ignorando espaços/pontuação).
+
+
+
+### Tabela de Intervalos (Sistema Leitner Adaptado)
+
+:
+
+* **Nível 1:** 1 dia | **Nível 2:** 2 dias | **Nível 3:** 4 dias | **Nível 4:** 7 dias | **Nível 5:** 15 dias | **Nível 6:** 30 dias
+
+
+
+### Lógica de Gatilhos e Alertas (SweetAlert):
+
+* **Uso do SweetAlert:** Todos os alertas do sistema (confirmações, avisos de erro, sucesso e gatilhos) devem obrigatoriamente utilizar a biblioteca **SweetAlert** (via CDN injetada no HTML).
+* **Gatilho do Nível 3 (Palavra gera Frase):** Quando um Card de Palavra for promovido do Nível 2 para o Nível 3, o sistema deve disparar um pop-up do SweetAlert notificando: *"Parabéns! A palavra [Nome] alcançou o Nível 3. Lembre-se de abrir seu caderno físico, criar uma frase de 5 a 8 caracteres para ela e cadastrá-la aqui!"*.
+
+
+* **Vincular e Pausar:** Se um Card de Palavra for rebaixado para o Nível 1, a Frase vinculada a ele entra automaticamente no status **"Em Espera" (Pausada)**, sumindo da fila de revisão até que o Card volte ao Nível 3.
+
+
+
+---
+
+## 🎨 2. ARQUITETURA DE INTERFACE (TELA ÚNICA / SPA)
+
+A interface deve ser minimalista, em **Modo Escuro (Dark Mode por padrão)**, focada em dispositivos móveis e dividida nas seguintes seções acessíveis por abas limpas:
+
+### Seção A: Painel "HOJE" (Fila de Execução)
+
+* Exibe itens (Cards e Frases) com data de revisão **menor ou igual à data atual**. Itens atrasados acumulam aqui automaticamente.
+
+
+* Exibe o identificador (ex: *"📦 Caixa 2 - Lote X"* ou *"📖 Frase Caderno #12"*) com os botões **`[Acertei]`** e **`[Errei]`**. Ao clicar, o item ganha feedback visual mas não some antes da finalização.
+
+
+
+### Seção B: Botão "Finalizar Revisão"
+
+* Botão de destaque na parte inferior da tela "HOJE". Ao clicar:
+
+
+1. Processa os checks, atualiza níveis e calcula as próximas datas futuras no `localStorage`.
+
+
+2. **Controle de Atrasos:** Itens não revisados ("em branco") são postergados automaticamente para o dia seguinte (Data Atual + 1 dia).
+
+
+3. Atualiza a tela com um SweetAlert de sucesso.
+
+
+
+### Seção C: Manual do Método ("Bíblia da Revisão")
+
+Uma seção fixa e formatada contendo as diretrizes do estudante para consulta rápida:
+
+* **Pilar 1 (Fichário):** Regras do uso de cartões (Frente: Hanzi / Verso: Pinyin + Tradução); avançar 1 nível ao acertar, resetar para o Nível 1 ao errar.
+
+
+* **Pilar 2 (Caderno):** Regras de frases com lacunas (cloze) indexadas por número; errar a frase reseta o relógio dela no app mas mantém o cartão físico da palavra intacto no fichário.
+
+
+* **Regra de Transição:** Explicação de que ao atingir o Nível 3, a palavra gera uma frase no caderno e ambas passam a rodar em trilhas paralelas.
+
+
+
+### Seção D: Formulário "Novo Agendamento"
+
+* Campos: Nome/Identificador, Tipo (Toggle Card/Frase), Vínculo (Select listando os Cards existentes) e Nível Inicial (padrão 1). A data futura é calculada na hora.
+
+
+
+### Seção E: Calendário / Próximas Revisões
+
+* Lista informativa agrupando a carga de estudo por datas futuras (ex: *"Amanhã: 3 cards, 1 frase"*).
+
+
+
+### Seção F: Gerenciamento Avançado
+
+* Lista de busca para edição de itens cadastrados e alteração manual de níveis.
+
+
+* Botão **"Atualizar Arquivos"**: Força o Service Worker e o navegador a buscarem novas atualizações dos arquivos do projeto (como o `palavras.txt` ou ajustes de CSS/JS), garantindo o reload limpo **sem apagar ou resetar os dados do usuário salvos no `localStorage**`.
+* Botão **"Resetar Todo o Progresso"**: Limpa o `localStorage` (pede confirmação via SweetAlert antes).
+
+---
+
+## 📂 3. ESTRUTURA DE ARQUIVOS E MODULARIDADE (ES6)
+
+O projeto deve ser estritamente dividido na seguinte estrutura de arquivos locais:
+
+```text
+meu-app-mandarim/
+├── index.html
+├── styles.css
+├── palavras.txt
+├── manifest.json
+├── service-worker.js
+└── js/
+    ├── app.js
+    ├── db.js
+    ├── scheduler.js
+    └── ui.js
+
+```
+
+### Especificação de cada arquivo JavaScript (Módulos ES6):
+
+1. **`index.html`:** Contém a casca da SPA, as tags de abas, injeta o SweetAlert via CDN e importa o script principal usando `type="module"` (`js/app.js`).
+2. **`styles.css`:** Concentra todo o design responsivo mobile-first em Dark Mode.
+3. **`service-worker.js` & `manifest.json`:** Configurações de PWA para cacheamento agressivo de ativos e funcionamento 100% offline.
+4. **`js/db.js` (Módulo de Dados):** Cuida puramente do encapsulamento do `localStorage` (get, set, clear) e do `fetch` para leitura assíncrona do arquivo `palavras.txt`.
+5. **`js/scheduler.js` (Módulo de Regras/Prazos):** Contém as funções puras de cálculo de datas com base nos níveis de intervalo (1, 2, 4, 7, 15, 30 dias), a lógica de herança de status ("Em Espera") e o recálculo automático de itens não revisados no fim do dia.
+
+
+6. **`js/ui.js` (Módulo de Renderização):** Gerencia a manipulação do DOM, cria os elementos HTML dinâmicos da fila "HOJE", monta o calendário, preenche os formulários e centraliza as chamadas visuais do `SweetAlert`.
+7. **`js/app.js` (O Orquestrador Central):** Importa as funções dos submódulos (`db.js`, `scheduler.js`, `ui.js`), inicializa o estado da aplicação, gerencia os event listeners globais e registra o service worker.
+
+Gere o código completo, limpo, modular e bem comentado com base nesta arquitetura.
