@@ -5,6 +5,8 @@ const ASSETS = [
   './styles.css',
   './palavras.txt',
   './manifest.json',
+  './icon.png',    // Adicionado ao Cache
+  './splash.png',  // Adicionado ao Cache
   './js/app.js',
   './js/db.js',
   './js/scheduler.js',
