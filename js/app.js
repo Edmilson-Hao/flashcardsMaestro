@@ -1,24 +1,28 @@
+// js/app.js
+
 import { getStorageData, saveStorageData, clearStorageData, carregarPalavrasExternas } from './db.js';
 import { calcularProximaData, validarTamanhoFrase, processarSessaoRevisao } from './scheduler.js';
 import * as ui from './ui.js';
 
 let STATE = { items: [] };
-let SESSAO_CHECKS = {}; // Guarda as respostas temporárias da sessão { id: 'sucesso'|'falha' }
+let SESSAO_CHECKS = {}; // Cache de conferência rápida da sessão { id: 'sucesso'|'falha' }
 
 document.addEventListener('DOMContentLoaded', async () => {
-    // Inicializar Dados
+    // Inicialização do Estado
     STATE = getStorageData();
     initAppEvents();
     renderAll();
 
-    // Tenta registrar o service worker de forma silenciosa e offline
+    // Registro transparente do Service Worker offline
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./service-worker.js').catch(err => console.log(err));
+        navigator.serviceWorker.register('./service-worker.js').catch(err => {
+            console.log("Aviso de registro do SW: ", err);
+        });
     }
 });
 
 function initAppEvents() {
-    // Sistema de Abas SPA
+    // Gerenciador de Abas Dinâmicas SPA
     document.querySelectorAll('.nav-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -31,39 +35,44 @@ function initAppEvents() {
         });
     });
 
-    // Toggle de Mudança de Formulário (Card vs Frase)
+    // Alternância de escopo do Formulário de Cadastro (Card vs Frase)
     document.getElementsByName('item-type').forEach(radio => {
         radio.addEventListener('change', (e) => {
-            const vieldGroup = document.querySelector('.id-vinculo-group');
+            const vinculoGroup = document.querySelector('.id-vinculo-group');
             const labelIdentificador = document.getElementById('label-identificador');
+            
             if (e.target.value === 'frase') {
-                vieldGroup.classList.remove('hidden');
-                labelIdentificador.textContent = "Número da Frase (Índice Caderno)";
+                vinculoGroup.classList.remove('hidden');
+                labelIdentificador.textContent = "Número da Frase (Índice Caderno: Ex #1 - 你好)";
             } else {
-                vieldGroup.classList.add('hidden');
+                vinculoGroup.classList.add('hidden');
                 labelIdentificador.textContent = "Identificador / Nome";
             }
         });
     });
 
-    // Submissão do Formulário de Cadastro
+    // Evento de Submissão e Validação Inteligente de Entrada de Dados
     document.getElementById('form-agendamento').addEventListener('submit', async (e) => {
         e.preventDefault();
+        
         const type = document.querySelector('input[name="item-type"]:checked').value;
         const id = document.getElementById('item-id').value.trim();
         const vinculo = document.getElementById('item-vinculo').value;
         const nivel = parseInt(document.getElementById('item-nivel').value);
 
+        // Bloqueia duplicações idênticas no mesmo domínio
         if (STATE.items.some(i => i.id === id && i.type === type)) {
-            ui.mostrarToast("Item já cadastrado!", "error");
+            ui.mostrarToast("Este identificador já se encontra agendado no sistema!", "error");
             return;
         }
 
+        // Validação customizada para a Opção Eleita (#1 - 你好)
         if (type === 'frase') {
-            // Se for inserido caracteres para validação na própria caixa de ID
-            const palavrasDoArquivo = await carregarPalavrasExternas();
-            if (id.length > 0 && !validarTamanhoFrase(id) && isNaN(id.replace('#', ''))) {
-                 ui.mostrarToast("Atenção: Valide se a frase possui entre 5 e 8 caracteres no caderno físico!", "warning");
+            const apenasChines = id.match(/[\u4e00-\u9fa5]/g) || [];
+            const contagemReal = apenasChines.length;
+
+            if (contagemReal < 5 || contagemReal > 8) {
+                ui.mostrarToast(`Aviso: O texto contém ${contagemReal} caracteres chineses. O método exige entre 5 e 8! Verifique seu caderno físico.`, "warning");
             }
         }
 
@@ -78,16 +87,19 @@ function initAppEvents() {
 
         STATE.items.push(novoItem);
         saveStorageData(STATE);
+        
         e.target.reset();
         document.querySelector('.id-vinculo-group').classList.add('hidden');
-        ui.mostrarToast("Agendado com sucesso!");
+        document.getElementById('label-identificador').textContent = "Identificador / Nome";
+        
+        ui.mostrarToast("Item agendado com sucesso!");
         renderAll();
     });
 
-    // Processamento do Botão Finalizar Dia
+    // Finalização e persistência da fila "HOJE"
     document.getElementById('btn-finalizar').addEventListener('click', () => {
         if (Object.keys(SESSAO_CHECKS).length === 0) {
-            ui.mostrarToast("Nenhum item respondido nesta sessão.", "warning");
+            ui.mostrarToast("Você precisa responder ao menos um item antes de finalizar!", "warning");
             return;
         }
 
@@ -96,28 +108,28 @@ function initAppEvents() {
         saveStorageData(STATE);
         SESSAO_CHECKS = {};
         
-        ui.mostrarToast("Sessão finalizada e salva!");
+        ui.mostrarToast("Revisão de hoje concluída e arquivada!");
         renderAll();
 
-        // Dispara os alertas SweetAlert para os cartões que bateram nível 3
+        // Dispara os alertas SweetAlert para os cards promovidos ao nível 3
         mudancasNivel3.forEach(nomeCard => {
             ui.dispararAlertaNivel3(nomeCard);
         });
     });
 
-    // Caixa de busca do painel avançado
+    // Filtro de busca em tempo real (Avançado)
     document.getElementById('search-input').addEventListener('input', (e) => {
         ui.renderizarGerenciamento(STATE.items, e.target.value, handleAlterarNivel);
     });
 
-    // Botão Forçar Atualização de Arquivos
+    // Recarga limpa de ativos via Service Worker (Mantém localStorage intacto)
     document.getElementById('btn-atualizar-arquivos').addEventListener('click', () => {
         if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
             navigator.serviceWorker.getRegistrations().then(registrations => {
                 for (let registration of registrations) {
                     registration.update();
                 }
-                ui.mostrarToast("Arquivos sincronizados de forma limpa!");
+                ui.mostrarToast("Ativos sincronizados com sucesso! Atualizando...");
                 setTimeout(() => window.location.reload(), 800);
             });
         } else {
@@ -125,16 +137,17 @@ function initAppEvents() {
         }
     });
 
-    // Botão Reset Absoluto de Fábrica
+    // Reset Total com caixa de confirmação de segurança (SweetAlert)
     document.getElementById('btn-reset-total').addEventListener('click', () => {
         Swal.fire({
-            title: 'Tem certeza?',
-            text: "Você perderá todo o histórico de revisões salvas localmente!",
+            title: 'Limpar Banco de Dados?',
+            text: "Esta ação é irreversível e apagará todo o seu progresso local!",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Sim, deletar tudo!',
+            confirmButtonColor: '#f44336',
+            cancelButtonColor: '#2196f3',
+            confirmButtonText: 'Sim, resetar tudo!',
+            cancelButtonText: 'Cancelar',
             background: '#1e1e1e',
             color: '#e0e0e0'
         }).then((result) => {
@@ -143,26 +156,32 @@ function initAppEvents() {
                 STATE = { items: [] };
                 SESSAO_CHECKS = {};
                 renderAll();
-                Swal.fire({ title: 'Zerado!', text: 'Banco de dados limpo.', icon: 'success', background: '#1e1e1e', color: '#e0e0e0' });
+                Swal.fire({
+                    title: 'Resetado!',
+                    text: 'O armazenamento local foi limpo com sucesso.',
+                    icon: 'success',
+                    background: '#1e1e1e',
+                    color: '#e0e0e0'
+                });
             }
         });
     });
 
-    // Deleção de itens na tabela de gerenciamento via event delegation
+    // Delegação de eventos para exclusão direta na tabela de listagem
     document.getElementById('tabela-gerenciamento').addEventListener('click', (e) => {
         if (e.target.classList.contains('btn-deletar')) {
             const id = e.target.getAttribute('data-id');
             STATE.items = STATE.items.filter(i => i.id !== id);
             saveStorageData(STATE);
             renderAll();
-            ui.mostrarToast("Item excluído.");
+            ui.mostrarToast("O registro foi removido com sucesso.");
         }
     });
 }
 
 function handleItemResponse(id, action) {
     if (SESSAO_CHECKS[id] === action) {
-        delete SESSAO_CHECKS[id]; // Desmarca se clicar de novo no mesmo botão
+        delete SESSAO_CHECKS[id]; 
     } else {
         SESSAO_CHECKS[id] = action;
     }
@@ -172,12 +191,17 @@ function handleItemResponse(id, action) {
 function handleAlterarNivel(id, novoNivel) {
     STATE.items = STATE.items.map(item => {
         if (item.id === id) {
-            return { ...item, nivel: novoNivel, proximaRevisao: calcularProximaData(novoNivel, new Date()) };
+            return { 
+                ...item, 
+                nivel: novoNivel, 
+                proximaRevisao: calcularProximaData(novoNivel, new Date()),
+                status: (item.type === 'frase' && item.status === 'pausado') ? 'ativo' : item.status
+            };
         }
         return item;
     });
     saveStorageData(STATE);
-    ui.mostrarToast("Nível alterado manualmente.");
+    ui.mostrarToast("Nível do cronograma alterado manualmente.");
     renderAll();
 }
 
