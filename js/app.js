@@ -1,5 +1,3 @@
-// js/app.js
-
 import { getStorageData, saveStorageData, clearStorageData, carregarPalavrasExternas } from './db.js';
 import { calcularProximaData, validarTamanhoFrase, processarSessaoRevisao } from './scheduler.js';
 import * as ui from './ui.js';
@@ -36,138 +34,146 @@ function initAppEvents() {
     });
 
     // Alternância de escopo do Formulário de Cadastro (Card vs Frase)
-    document.getElementsByName('item-type').forEach(radio => {
-        radio.addEventListener('change', (e) => {
-            const vinculoGroup = document.querySelector('.id-vinculo-group');
-            const labelIdentificador = document.getElementById('label-identificador');
-            
-            if (e.target.value === 'frase') {
-                vinculoGroup.classList.remove('hidden');
-                labelIdentificador.textContent = "Número da Frase (Índice Caderno: Ex #1 - 你好)";
-            } else {
-                vinculoGroup.classList.add('hidden');
-                labelIdentificador.textContent = "Identificador / Nome";
-            }
-        });
-    });
+    const radioCard = document.getElementById('type-card');
+    const radioFrase = document.getElementById('type-frase');
+    const labelId = document.getElementById('label-identificador');
+    const vinculoGroup = document.querySelector('.id-vinculo-group');
 
-    // Evento de Submissão e Validação Inteligente de Entrada de Dados
+    if (radioCard && radioFrase) {
+        const atualizarCamposForm = () => {
+            if (radioCard.checked) {
+                labelId.textContent = "Identificador do Item (Palavra ou Bloco)";
+                document.getElementById('item-id').placeholder = "Ex: 老师";
+                vinculoGroup.classList.add('hidden');
+                document.getElementById('item-vinculo').required = false;
+            } else {
+                labelId.textContent = "Número da Frase (Índice Caderno: Ex #1)";
+                document.getElementById('item-id').placeholder = "Ex: #1";
+                vinculoGroup.classList.remove('hidden');
+                document.getElementById('item-vinculo').required = true;
+                ui.popularSelectVinculos(STATE.items);
+            }
+        };
+
+        radioCard.addEventListener('change', atualizarCamposForm);
+        radioFrase.addEventListener('change', atualizarCamposForm);
+    }
+
+    // Submissão do Formulário de Cadastro
     document.getElementById('form-agendamento').addEventListener('submit', async (e) => {
         e.preventDefault();
-        
-        const type = document.querySelector('input[name="item-type"]:checked').value;
-        const id = document.getElementById('item-id').value.trim();
-        const vinculo = document.getElementById('item-vinculo').value;
-        const nivel = parseInt(document.getElementById('item-nivel').value);
 
-        // Bloqueia duplicações idênticas no mesmo domínio
-        if (STATE.items.some(i => i.id === id && i.type === type)) {
-            ui.mostrarToast("Este identificador já se encontra agendado no sistema!", "error");
+        const id = document.getElementById('item-id').value.trim();
+        const type = document.querySelector('name="item-type"').value || (radioCard.checked ? 'card' : 'frase');
+        const nivel = parseInt(document.getElementById('item-nivel').value);
+        const vinculo = type === 'frase' ? document.getElementById('item-vinculo').value : "";
+
+        // Valida se o ID já existe para evitar duplicações de PK
+        if (STATE.items.some(item => item.id === id)) {
+            ui.mostrarToast("Este identificador já está registrado no sistema.", "error");
             return;
         }
 
-        // Validação customizada para a Opção Eleita (#1 - 你好)
+        // Se for frase, aplica a validação de caracteres do caderno físico (5 a 8 caracteres)
         if (type === 'frase') {
-            const apenasChines = id.match(/[\u4e00-\u9fa5]/g) || [];
-            const contagemReal = apenasChines.length;
+            const hanzisDisponiveis = await carregarPalavrasExternas();
+            const fraseLimpa = hanzisDisponiveis.find(h => id.includes(h)) || id;
 
-            if (contagemReal < 5 || contagemReal > 8) {
-                ui.mostrarToast(`Aviso: O texto contém ${contagemReal} caracteres chineses. O método exige entre 5 e 8! Verifique seu caderno físico.`, "warning");
+            if (!validarTamanhoFrase(fraseLimpa)) {
+                ui.mostrarToast("A frase deve conter entre 5 e 8 caracteres chineses (Regra do Caderno).", "warning");
+                return;
             }
         }
+
+        // Calcula a data com base no dia corrente do dispositivo do usuário
+        const hojeLocal = new Date();
+        const proximaRevisao = calcularProximaData(nivel, hojeLocal);
 
         const novoItem = {
             id,
             type,
             nivel,
-            vinculo: type === 'frase' ? vinculo : null,
-            proximaRevisao: calcularProximaData(nivel, new Date()),
-            status: 'ativo'
+            proximaRevisao,
+            vinculo,
+            status: 'ativo',
+            dataCriacao: hojeLocal.toISOString().split('T')[0]
         };
 
         STATE.items.push(novoItem);
         saveStorageData(STATE);
         
-        e.target.reset();
-        document.querySelector('.id-vinculo-group').classList.add('hidden');
-        document.getElementById('label-identificador').textContent = "Identificador / Nome";
-        
         ui.mostrarToast("Item agendado com sucesso!");
+        e.target.reset();
+        
+        // Garante o fechamento das caixas ocultas após reset do form
+        vinculoGroup.classList.add('hidden');
+        labelId.textContent = "Identificador do Item (Palavra ou Bloco)";
+        
         renderAll();
     });
 
-    // Finalização e persistência da fila "HOJE"
+    // Submissão/Finalização da Sessão de Revisão do Dia
     document.getElementById('btn-finalizar').addEventListener('click', () => {
         if (Object.keys(SESSAO_CHECKS).length === 0) {
-            ui.mostrarToast("Você precisa responder ao menos um item antes de finalizar!", "warning");
+            ui.mostrarToast("Avalie os itens antes de finalizar a sessão.", "warning");
             return;
         }
 
         const { estadoFinal, mudancasNivel3 } = processarSessaoRevisao(STATE.items, SESSAO_CHECKS);
+        
         STATE.items = estadoFinal;
         saveStorageData(STATE);
-        SESSAO_CHECKS = {};
-        
-        ui.mostrarToast("Revisão de hoje concluída e arquivada!");
-        renderAll();
 
-        // Dispara os alertas SweetAlert para os cards promovidos ao nível 3
+        // Dispara alertas comemorativos para cada item que atingiu o Nível 3
         mudancasNivel3.forEach(nomeCard => {
             ui.dispararAlertaNivel3(nomeCard);
         });
+
+        ui.mostrarToast("Sessão finalizada e prazos recalculados!");
+        SESSAO_CHECKS = {}; // Limpa cache da sessão corrente
+        renderAll();
     });
 
-    // Filtro de busca em tempo real (Avançado)
-    document.getElementById('search-input').addEventListener('input', (e) => {
-        ui.renderizarGerenciamento(STATE.items, e.target.value, handleAlterarNivel);
-    });
-
-    // Recarga limpa de ativos via Service Worker (Mantém localStorage intacto)
+    // Listener para o botão de forçar reload de arquivos estáticos
     document.getElementById('btn-atualizar-arquivos').addEventListener('click', () => {
+        ui.mostrarToast("Atualizando cache do sistema...", "warning");
         if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
-            navigator.serviceWorker.getRegistrations().then(registrations => {
-                for (let registration of registrations) {
-                    registration.update();
-                }
-                ui.mostrarToast("Ativos sincronizados com sucesso! Atualizando...");
-                setTimeout(() => window.location.reload(), 800);
-            });
-        } else {
-            window.location.reload();
+            navigator.serviceWorker.controller.postMessage({ action: 'skipWaiting' });
         }
+        setTimeout(() => {
+            window.location.reload(true);
+        }, 800);
     });
 
-    // Reset Total com caixa de confirmação de segurança (SweetAlert)
+    // Listener para Reset Total de Fábrica
     document.getElementById('btn-reset-total').addEventListener('click', () => {
         Swal.fire({
-            title: 'Limpar Banco de Dados?',
-            text: "Esta ação é irreversível e apagará todo o seu progresso local!",
+            title: 'Tem certeza?',
+            text: "Todos os seus cronogramas e dados de revisão locais serão apagados permanentemente!",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#f44336',
-            cancelButtonColor: '#2196f3',
+            cancelButtonColor: '#333333',
             confirmButtonText: 'Sim, resetar tudo!',
-            cancelButtonText: 'Cancelar',
-            background: '#1e1e1e',
-            color: '#e0e0e0'
+            cancelButtonText: 'Cancelar'
         }).then((result) => {
             if (result.isConfirmed) {
                 clearStorageData();
                 STATE = { items: [] };
                 SESSAO_CHECKS = {};
                 renderAll();
-                Swal.fire({
-                    title: 'Resetado!',
-                    text: 'O armazenamento local foi limpo com sucesso.',
-                    icon: 'success',
-                    background: '#1e1e1e',
-                    color: '#e0e0e0'
-                });
+                ui.mostrarToast("O sistema foi resetado para os padrões de fábrica.", "error");
             }
         });
     });
 
-    // Delegação de eventos para exclusão direta na tabela de listagem
+    // Caixa de pesquisa dinâmica na aba avançado
+    document.getElementById('search-input').addEventListener('input', (e) => {
+        const termo = e.target.value.toLowerCase().trim();
+        ui.renderizarTabelaGerenciamento(STATE.items, termo, handleAlterarNivel);
+    });
+
+    // Delegação de eventos para remoção individual de linhas na tabela
     document.getElementById('tabela-gerenciamento').addEventListener('click', (e) => {
         if (e.target.classList.contains('btn-deletar')) {
             const id = e.target.getAttribute('data-id');
@@ -207,7 +213,17 @@ function handleAlterarNivel(id, novoNivel) {
 
 function renderAll() {
     ui.renderizarFilaHoje(STATE.items, SESSAO_CHECKS, handleItemResponse);
-    ui.renderizarCalendario(STATE.items);
-    ui.atualizarSelectVinculos(STATE.items);
-    ui.renderizarGerenciamento(STATE.items, document.getElementById('search-input').value, handleAlterarNivel);
+    ui.renderizarCalendarioFuturo(STATE.items);
+    
+    // CORREÇÃO: Passando explicitamente a função handleAlterarNivel no segundo parâmetro
+    ui.renderizarTabelaGerenciamento(STATE.items, handleAlterarNivel);
+    
+    // Atualização dos cards de métricas (se houver no HTML)
+    const metricAtivos = document.getElementById('metric-ativos');
+    const metricFrases = document.getElementById('metric-frases');
+    const metricPausados = document.getElementById('metric-pausados');
+    
+    if (metricAtivos) metricAtivos.innerText = STATE.items.filter(i => i.type === 'card' && i.status !== 'pausado').length;
+    if (metricFrases) metricFrases.innerText = STATE.items.filter(i => i.type === 'frase').length;
+    if (metricPausados) metricPausados.innerText = STATE.items.filter(i => i.status === 'pausado').length;
 }

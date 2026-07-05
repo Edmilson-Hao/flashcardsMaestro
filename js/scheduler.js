@@ -1,5 +1,3 @@
-// js/scheduler.js
-
 const INTERVALOS = {
     1: 1,
     2: 2,
@@ -11,15 +9,27 @@ const INTERVALOS = {
 
 /**
  * Calcula a data futura de revisão com base no nível do sistema Leitner.
+ * Força o cálculo baseado estritamente no fuso horário local do dispositivo,
+ * garantindo que itens marcados como 'falha' (Nível 1) sejam agendados para amanhã.
  * @param {number} nivel - Nível de 1 a 6.
  * @param {Date} dataBase - Data de partida para o cálculo.
- * @returns {string} Data formatada em ISO (AAAA-MM-DD).
+ * @returns {string} Data formatada em padrão local (AAAA-MM-DD).
  */
 export function calcularProximaData(nivel, dataBase = new Date()) {
     const dias = INTERVALOS[nivel] || 1;
-    const resultado = new Date(dataBase);
+    
+    // Cria uma nova instância de data baseada no fuso horário local
+    const resultado = new Date(dataBase.getFullYear(), dataBase.getMonth(), dataBase.getDate());
+    
+    // Adiciona os dias de intervalo correspondentemente
     resultado.setDate(resultado.getDate() + dias);
-    return resultado.toISOString().split('T')[0];
+    
+    // Formata manualmente em AAAA-MM-DD usando o horário local para evitar quebras do ISO/UTC
+    const ano = resultado.getFullYear();
+    const mes = String(resultado.getMonth() + 1).padStart(2, '0');
+    const dia = String(resultado.getDate()).padStart(2, '0');
+    
+    return `${ano}-${mes}-${dia}`;
 }
 
 /**
@@ -34,32 +44,26 @@ export function validarTamanhoFrase(frase) {
 }
 
 /**
- * Processa as respostas da sessão atual, aplicando progressão, regressão e controle de atrasos.
- * @param {Array} items - Lista total de itens do estado.
- * @param {Object} checks - Mapeamento de respostas da sessão { id: 'sucesso'|'falha' }.
- * @returns {Object} Objeto com o estado final e o array de IDs que dispararam o nível 3.
+ * Processas as respostas da sessão atual, aplicando progressão
+ * ou regressão para o Nível 1 caso falhe.
+ * @param {Array} items - Array de itens vindos do STATE.
+ * @param {Object} respostas - Objeto com as conferências da sessão { id: 'sucesso'|'falha' }
+ * @returns {Object} Objeto com o estado final atualizado e mutações de nível 3.
  */
-export function processarSessaoRevisao(items, checks) {
-    const hojeStr = new Date().toISOString().split('T')[0];
-    let mudancasNivel3 = [];
+export function processarSessaoRevisao(items, respostas) {
+    const mudancasNivel3 = [];
 
     const itemsAtualizados = items.map(item => {
-        // Regra de Controle de Atrasos: Itens não respondidos na fila de hoje acumulam para amanhã
-        if (!checks.hasOwnProperty(item.id)) {
-            if (item.proximaRevisao <= hojeStr && item.status !== 'pausado') {
-                return { ...item, proximaRevisao: calcularProximaData(1, new Date()) };
-            }
-            return item;
-        }
+        const resposta = respostas[item.id];
+        if (!resposta) return item; // Se não foi revisado nesta sessão, mantém intocado
 
-        const resposta = checks[item.id];
         let novoNivel = item.nivel;
         let novoStatus = item.status;
 
         if (resposta === 'sucesso') {
-            if (novoNivel < 6) {
-                novoNivel += 1;
-                // Gatilho visual: Palavra promovida do Nível 2 para o Nível 3
+            if (item.nivel < 6) {
+                novoNivel = item.nivel + 1;
+                // Se um card atingir o Nível 3, registra o evento para disparar o alerta
                 if (item.type === 'card' && novoNivel === 3) {
                     mudancasNivel3.push(item.id);
                 }

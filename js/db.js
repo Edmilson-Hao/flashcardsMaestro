@@ -1,5 +1,3 @@
-// js/db.js
-
 const STORAGE_KEY = 'maestro_estudos_data';
 
 /**
@@ -43,9 +41,9 @@ export async function carregarPalavrasExternas() {
         
         return listaPalavras
             .map(item => item.hanzi ? item.hanzi.trim() : "")
-            .filter(h => h.length > 0);
-    } catch (err) {
-        console.error("Falha ao ler ou processar o arquivo de palavras JSON offline:", err);
+            .filter(h => h !== "");
+    } catch (e) {
+        console.error("Falha ao mapear dicionário externo para validação:", e);
         return [];
     }
 }

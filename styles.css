@@ -4,6 +4,8 @@
     --bg-nav: #1a1a1a;
     --accent: #4caf50;
     --accent-fail: #f44336;
+    --accent-warn: #ff9800;
+    --accent-info: #00bcd4;
     --text-primary: #e0e0e0;
     --text-secondary: #aaaaaa;
     --border-color: #333333;
@@ -20,12 +22,12 @@ body {
     background-color: var(--bg-main);
     color: var(--text-primary);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    padding-bottom: 80px; /* Espaço para barra inferior fixa */
+    padding-bottom: 90px;
 }
 
 .app-header {
     background-color: var(--bg-card);
-    padding: 15px;
+    padding: 15px 20px;
     text-align: center;
     border-bottom: 1px solid var(--border-color);
     display: flex;
@@ -38,48 +40,70 @@ body {
     font-weight: 600;
 }
 
+/* Badges de Status Modernos */
 .badge {
-    background-color: #2e7d32;
-    color: white;
-    font-size: 0.75rem;
     padding: 4px 8px;
     border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+#offline-badge {
+    background-color: rgba(76, 175, 80, 0.15);
+    color: var(--accent);
+    border: 1px solid var(--accent);
 }
 
-/* Navegação por Abas Inferiores (Mobile-First) */
+.badge-card { background-color: rgba(0, 188, 212, 0.15); color: var(--accent-info); }
+.badge-frase { background-color: rgba(15c, 108, 243, 0.15); color: #9c6cf3; }
+.badge-pausado { background-color: rgba(244, 67, 54, 0.15); color: var(--accent-fail); }
+.badge-ativo { background-color: rgba(76, 175, 80, 0.15); color: var(--accent); }
+
+/* Navegação SPA Fixa */
 .app-nav {
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
+    height: 70px;
     background-color: var(--bg-nav);
     display: flex;
+    justify-content: space-around;
+    align-items: center;
     border-top: 1px solid var(--border-color);
     z-index: 1000;
+    box-shadow: 0 -4px 10px rgba(0,0,0,0.3);
 }
 
 .nav-btn {
-    flex: 1;
     background: none;
     border: none;
     color: var(--text-secondary);
-    padding: 15px 5px;
-    font-size: 0.8rem;
+    font-size: 0.85rem;
+    font-weight: 500;
     cursor: pointer;
-    text-align: center;
-    transition: color 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    transition: color 0.2s, transform 0.1s;
+    width: 25%;
+    height: 100%;
+    justify-content: center;
 }
 
 .nav-btn.active {
     color: var(--accent);
     font-weight: bold;
-    border-top: 3px solid var(--accent);
-    padding-top: 12px;
 }
 
-/* Layout das Abas */
-.app-content {
-    padding: 15px;
+.nav-btn:active {
+    transform: scale(0.95);
+}
+
+/* Containers Globais */
+.app-container {
+    padding: 20px;
     max-width: 600px;
     margin: 0 auto;
 }
@@ -90,166 +114,335 @@ body {
 
 .tab-panel.active {
     display: block;
+    animation: fadeIn 0.25s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 h2 {
+    font-size: 1.4rem;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+/* Cards de Métricas / KPI Summary */
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.metric-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    padding: 12px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.metric-card span {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+}
+
+.metric-card strong {
     font-size: 1.3rem;
-    margin-bottom: 15px;
     color: var(--text-primary);
 }
 
-/* Itens da Fila de Execução */
-.items-container {
+/* Fila de Execução (Hoje) */
+.execution-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-secondary);
+    background-color: var(--bg-card);
+    border-radius: 10px;
+    border: 1px dashed var(--border-color);
+}
+
+.flashcard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    padding-bottom: 8px;
+}
+
+.flashcard-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.flashcard-meta {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+/* --- ESTILIZAÇÃO DOS BOTÕES DE REVISÃO (SESSÃO HOJE) --- */
+.flashcard-actions {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+    margin-top: 8px;
+}
+
+/* Base Comum dos Seletores */
+.btn-review {
+    flex: 1;
+    padding: 12px 16px;
+    border: 2px solid transparent;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+    background-color: rgba(255, 255, 255, 0.03);
+    color: var(--text-secondary);
+}
+
+/* Estado de Falha (Neutro vs Selecionado) */
+.btn-review.fail {
+    border-color: rgba(244, 67, 54, 0.3);
+    color: #ff7961;
+}
+.btn-review.fail:active {
+    background-color: rgba(244, 67, 54, 0.15);
+}
+.btn-review.fail.checked {
+    background-color: var(--accent-fail);
+    border-color: var(--accent-fail);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
+}
+
+/* Estado de Sucesso (Neutro vs Selecionado) */
+.btn-review.success {
+    border-color: rgba(76, 175, 80, 0.3);
+    color: #81c784;
+}
+.btn-review.success:active {
+    background-color: rgba(76, 175, 80, 0.15);
+}
+.btn-review.success.checked {
+    background-color: var(--accent);
+    border-color: var(--accent);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+/* Ajuste sutil na linha do Flashcard */
+.flashcard-row {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Formulários Modernos */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+}
+
+input[type="text"], select {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+input[type="text"]:focus, select:focus {
+    border-color: var(--accent);
+}
+
+.radio-group {
+    display: flex;
+    gap: 15px;
+    background-color: var(--bg-card);
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.radio-group label {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+/* Botões Customizados */
+.btn-success, .btn-danger, .btn-secondary {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.1s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-success { background-color: var(--accent); color: #fff; }
+.btn-danger { background-color: var(--accent-fail); color: #fff; }
+.btn-secondary { background-color: #2a2a2a; color: var(--text-primary); }
+
+.btn-success:active, .btn-danger:active, .btn-secondary:active {
+    transform: scale(0.98);
+}
+
+/* Caixa de Busca */
+.search-box {
+    margin-bottom: 15px;
+}
+
+/* 📱 REESTRUTURAÇÃO RESPONSIVA DA TABELA (UX CRÍTICA) */
+.table-wrapper {
+    width: 100%;
+}
+
+.app-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+/* Esconde o cabeçalho nativo em telas mobile para evitar esmagamento */
+@media (max-width: 600px) {
+    .app-table thead {
+        display: none;
+    }
+    
+    .app-table tr {
+        display: flex;
+        flex-direction: column;
+        background-color: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 14px;
+        margin-bottom: 12px;
+        gap: 8px;
+    }
+
+    .app-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 6px 0 !important;
+        border: none !important;
+        font-size: 0.95rem;
+    }
+
+    /* Cria rótulos simulados à esquerda via CSS pseudo-elements */
+    .app-table td::before {
+        content: attr(data-label);
+        font-weight: 500;
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+    }
+
+    /* Alinha os controles e selects à direita */
+    .app-table td .select-nivel-inline,
+    .app-table td .btn-deletar {
+        width: auto !important;
+        max-width: 140px;
+        padding: 6px 10px !important;
+        font-size: 0.85rem !important;
+        margin: 0;
+    }
+    
+    .app-table td .btn-deletar {
+        background-color: rgba(244, 67, 54, 0.1) !important;
+        color: var(--accent-fail) !important;
+        border: 1px solid var(--accent-fail) !important;
+        border-radius: 6px;
+    }
+}
+
+/* Estilo para telas maiores / Desktop */
+@media (min-width: 601px) {
+    .app-table th, .app-table td {
+        padding: 12px;
+        border-bottom: 1px solid var(--border-color);
+        text-align: left;
+    }
+    .app-table th { color: var(--text-secondary); font-size: 0.85rem; }
+    .app-table tr:hover { background-color: rgba(255,255,255,0.02); }
+    .select-nivel-inline { padding: 6px; width: auto; font-size: 0.85rem; }
+    .btn-deletar { padding: 6px 12px; width: auto; font-size: 0.85rem; background-color: var(--accent-fail); color: white; border-radius: 4px;}
+}
+
+/* Timeline / Calendário */
+.timeline-container {
     display: flex;
     flex-direction: column;
     gap: 12px;
 }
 
-.execution-item {
-    background-color: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.execution-item.marked-success {
-    border-color: var(--accent);
-    background-color: rgba(76, 175, 80, 0.05);
-}
-
-.execution-item.marked-fail {
-    border-color: var(--accent-fail);
-    background-color: rgba(244, 67, 54, 0.05);
-}
-
-.item-info h4 {
-    font-size: 1rem;
-    margin-bottom: 4px;
-}
-
-.item-info span {
-    font-size: 0.8rem;
-    color: var(--text-secondary);
-}
-
-.item-actions {
-    display: flex;
-    gap: 8px;
-}
-
-/* Botões Customizados */
-button {
-    font-weight: 600;
-    border-radius: 6px;
-    cursor: pointer;
-    border: none;
-}
-
-.btn-sm {
-    padding: 8px 12px;
-    font-size: 0.85rem;
-}
-
-.btn-primary { background-color: #2196f3; color: white; }
-.btn-success { background-color: var(--accent); color: white; }
-.btn-danger { background-color: var(--accent-fail); color: white; }
-.btn-info { background-color: #00bcd4; color: white; }
-.btn-block { width: 100%; padding: 14px; font-size: 1rem; }
-
-.btn-outline-success { background: transparent; border: 1px solid var(--accent); color: var(--accent); }
-.btn-outline-success.active { background-color: var(--accent); color: white; }
-
-.btn-outline-danger { background: transparent; border: 1px solid var(--accent-fail); color: var(--accent-fail); }
-.btn-outline-danger.active { background-color: var(--accent-fail); color: white; }
-
-/* Formulários */
-.app-form .form-group {
-    margin-bottom: 15px;
-}
-
-.app-form label {
-    display: block;
-    font-size: 0.9rem;
-    margin-bottom: 6px;
-    color: var(--text-secondary);
-}
-
-.app-form input[type="text"], .app-form select, .search-box input {
-    width: 100%;
-    background-color: var(--bg-card);
-    border: 1px solid var(--border-color);
-    color: var(--text-primary);
-    padding: 12px;
-    border-radius: 6px;
-    font-size: 1rem;
-}
-
-.toggle-container {
-    display: flex;
-    background-color: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-    overflow: hidden;
-}
-
-.toggle-container input[type="radio"] {
-    display: none;
-}
-
-.toggle-container label {
-    flex: 1;
-    text-align: center;
-    padding: 12px;
-    margin-bottom: 0;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-
-.toggle-container input[type="radio"]:checked + label {
-    background-color: var(--accent);
-    color: white;
-    font-weight: bold;
-}
-
-.hidden { display: none !important; }
-.container-spacing-top { margin-top: 20px; }
-
-/* Timeline de Calendário */
 .timeline-day {
-    margin-bottom: 15px;
     background-color: var(--bg-card);
     border-left: 4px solid var(--accent);
-    padding: 10px 15px;
-    border-radius: 0 8px 8px 0;
+    padding: 14px;
+    border-radius: 0 10px 10px 0;
+    border: 1px solid var(--border-color);
+    border-left-width: 4px;
 }
 
 .timeline-day h4 {
-    font-size: 0.95rem;
+    font-size: 1rem;
     color: var(--accent);
-    margin-bottom: 5px;
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
 }
 
 .timeline-day p {
     font-size: 0.9rem;
     color: var(--text-secondary);
+    line-height: 1.4;
 }
 
-/* Tabelas */
-.table-responsive { width: 100%; overflow-x: auto; }
-.app-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem; }
-.app-table th, .app-table td { padding: 12px; border-bottom: 1px solid var(--border-color); }
-.app-table th { color: var(--text-secondary); }
+/* Utilitários */
+.hidden { display: none !important; }
+.container-spacing-top { margin-top: 25px; }
 
-/* Manual */
 .manual-content { display: flex; flex-direction: column; gap: 15px; }
 .manual-card { background-color: var(--bg-card); border: 1px solid var(--border-color); padding: 15px; border-radius: 8px; }
-.manual-card h3 { font-size: 1.05rem; margin-bottom: 8px; color: #2196f3; }
-.manual-card ul { padding-left: 20px; margin-top: 5px; font-size: 0.9rem; color: var(--text-secondary); }
-.manual-card li { margin-bottom: 4px; }
-.manual-card.highlighted { border-color: #ff9800; }
-.manual-card.highlighted h3 { color: #ff9800; }
-.manual-card.danger { border-color: var(--accent-fail); }
-.manual-card.danger h3 { color: var(--accent-fail); }
+.manual-card h3 { font-size: 1rem; margin-bottom: 6px; }
+.manual-card p { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.4; }
+.manual-card.highlighted { border-left: 4px solid var(--accent-info); }
