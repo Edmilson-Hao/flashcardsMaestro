@@ -1,0 +1,100 @@
+{"frase": "我喜欢喝热汤。", "pinying": "wǒ xǐhuan hē rè tāng.", "tradução": "Eu gosto de beber sopa quente."}
+{"frase": "医生也喜欢说中文吗？", "pinying": "yīshēng yě xǐhuan shuō Zhōngwén ma?", "tradução": "O médico também gosta de falar o idioma chinês?"}
+{"frase": "我们都很喜欢老师。", "pinying": "wǒmen dōu hěn xǐhuan lǎoshī.", "tradução": "Todos nós gostamos muito do professor."}
+{"frase": "他不喝热粥，他喜欢豆腐。", "pinying": "tā bù hē rè zhōu, tā xǐhuan dòufu.", "tradução": "Ele não bebe mingau de arroz quente, ele gosta de tofu."}
+{"frase": "你喜欢日本面吗？", "pinying": "nǐ xǐhuan Rìběn miàn ma?", "tradução": "Você gosta de macarrão do Japão?"}
+{"frase": "老师说中文，学生也说中文。", "pinying": "lǎoshī shuō Zhōngwén, xuéshēng yě shuō Zhōngwén.", "tradução": "O professor fala o idioma chinês, o estudante também fala o idioma chinês."}
+{"frase": "她们都很喜欢喝汤。", "pinying": "tāmen dōu hěn xǐhuan hē tāng.", "tradução": "Todas elas gostam muito de beber sopa."}
+{"frase": "医生不说中文。", "pinying": "yīshēng bù shuō Zhōngwén.", "tradução": "O médico não fala o idioma chinês."}
+{"frase": "你们喜欢日本豆腐吗？", "pinying": "nǐmen xǐhuan Rìběn dòufu ma?", "tradução": "Vocês gostam de tofu do Japão?"}
+{"frase": "我向医生说中文。", "pinying": "wǒ xiàng yīshēng shuō Zhōngwén.", "tradução": "Eu falo o idioma chinês em direção ao médico."}
+{"frase": "我今天想吃包子和热汤。", "pinying": "wǒ jīntiān xiǎng chī bāozi hé rè tāng.", "tradução": "Hoje eu quero comer pão chinês no vapor e sopa quente."}
+{"frase": "你的爸爸是医生吗？", "pinying": "nǐ de bàba shì yīshēng ma?", "tradução": "O seu pai é médico?"}
+{"frase": "他买了一个很大的苹果。", "pinying": "tā mǎi le yí gè hěn dà de píngguǒ.", "tradução": "Ele comprou uma maçã muito grande."}
+{"frase": "老师明天去中国。", "pinying": "lǎoshī míngtiān qù Zhōngguó.", "tradução": "O professor vai para a China amanhã."}
+{"frase": "学生们在大学学习中文。", "pinying": "xuéshēngmen zài dàxué xuéxí Zhōngwén.", "tradução": "Os estudantes estudam o idioma chinês na universidade."}
+{"frase": "我喜欢喝茶，也喜欢喝牛奶。", "pinying": "wǒ xǐhuan hē chá, yě xǐhuan hē niúnǎi.", "tradução": "Eu gosto de beber chá, e também gosto de beber leite."}
+{"frase": "她的猫很漂亮。", "pinying": "tā de māo hěn piàoliang.", "tradução": "O gato dela é muito bonito."}
+{"frase": "你们昨天看电影了吗？", "pinying": "nǐmen zuótiān kàn diànyǐng le ma?", "tradução": "Vocês assistiram a um filme ontem?"}
+{"frase": "这个商店的东西很便宜。", "pinying": "zhège shāngdiàn de dōngxi hěn piányi.", "tradução": "As coisas desta loja são muito baratas."}
+{"frase": "我们上午去医院看病。", "pinying": "wǒmen shàngwǔ qù yīyuàn kànbìng.", "tradução": "Nós vamos ao hospital ver um médico de manhã."}
+{"frase": "你认识那个男学生吗？", "pinying": "nǐ rènshi nàge nán xuéshēng ma?", "tradução": "Você conhece aquele estudante homem?"}
+{"frase": "他在房间里睡觉。", "pinying": "tā zài fángjiān lǐ shuìjiào.", "tradução": "Ele está dormindo dentro do quarto."}
+{"frase": "我的好朋友会开车。", "pinying": "wǒ de hǎo péngyou huì kāichē.", "tradução": "Meu bom amigo sabe dirigir."}
+{"frase": "这本书多少钱？", "pinying": "zhè běn shū duōshao qián?", "tradução": "Quanto custa este livro?"}
+{"frase": "我今天非常高兴。", "pinying": "wǒ jīntiān fēicháng gāoxìng.", "tradução": "Eu estou extremamente feliz hoje."}
+{"frase": "她们正在吃早饭。", "pinying": "tāmen zhèngzài chī zǎofàn.", "tradução": "Elas estão comendo o café da manhã agora."}
+{"frase": "你想去超市买什么？", "pinying": "nǐ xiǎng qù chāoshì mǎi shénme?", "tradução": "O que você quer comprar no supermercado?"}
+{"frase": "天气很冷，外边在下雪。", "pinying": "tiānqì hěn lěng, wàibian zài xià xuě.", "tradução": "O tempo está muito frio, está nevando lá fora."}
+{"frase": "爸爸晚上不工作。", "pinying": "bàba wǎnshang bù gōngzuò.", "tradução": "O pai não trabalha à noite."}
+{"frase": "这个电脑是新的。", "pinying": "zhège diànnǎo shì xīn de.", "tradução": "Este computador é novo."}
+{"frase": "医生说我不可以吃面条儿。", "pinying": "yīshēng shuō wǒ bù kěyǐ chī miàntiáor.", "tradução": "O médico disse que eu não posso comer macarrão."}
+{"frase": "我没有他的手机号。", "pinying": "wǒ méiyǒu tā de shǒujī hào.", "tradução": "Eu não tenho o número de celular dele."}
+{"frase": "他们坐火车去学校。", "pinying": "tāmen zuò huǒchē qù xuéxiào.", "tradução": "Eles pegam o trem para ir à escola."}
+{"frase": "那个饭店的菜很好吃。", "pinying": "nàge fàndiàn de cài hěn hǎochī.", "tradução": "A comida daquele restaurante é muito gostosa."}
+{"frase": "姐姐买了一些漂亮的衣服。", "pinying": "jiějie mǎi le yìxiē piàoliang de yīfu.", "tradução": "A irmã mais velha comprou algumas roupas bonitas."}
+{"frase": "我们明天下午休息。", "pinying": "wǒmen míngtiān xiàwǔ xiūxi.", "tradução": "Nós descansamos amanhã à tarde."}
+{"frase": "小狗在桌子下睡觉。", "pinying": "xiǎogǒu zài zhuōzi xià shuìjiào.", "tradução": "O cachorrinho está dormindo debaixo da mesa."}
+{"frase": "请问，医院在哪里？", "pinying": "qǐngwèn, yīyuàn zài nǎlǐ?", "tradução": "Com licença, onde fica o hospital?"}
+{"frase": "我觉得中文很好听。", "pinying": "wǒ juéde Zhōngwén hěn hǎotīng.", "tradução": "Eu acho que o idioma chinês soa muito bem."}
+{"frase": "再见，明天见！", "pinying": "zàijiàn, míngtiān jiàn!", "tradução": "Adeus, até amanhã!"}
+{"frase": "他在看电视。", "pinying": "tā zài kàn diànshì.", "tradução": "Ele está assistindo televisão."}
+{"frase": "我们去电影院看电影吧。", "pinying": "wǒmen qù diànyǐngyuàn kàn diànyǐng ba.", "tradução": "Vamos ao cinema assistir a um filme."}
+{"frase": "姐姐的衣服很漂亮。", "pinying": "jiějie de yīfu hěn piàoliang.", "tradução": "As roupas da irmã mais velha são muito bonitas."}
+{"frase": "你要喝水吗？", "pinying": "nǐ yào hē shuǐ ma?", "tradução": "Você quer beber água?"}
+{"frase": "妈妈在做饭，菜很好吃。", "pinying": "māma zài zuò fàn, cài hěn hǎochī.", "tradução": "A mãe está cozinhando, a comida está muito gostosa."}
+{"frase": "我买了一个杯子。", "pinying": "wǒ mǎi le yí gè bēizi.", "tradução": "Eu comprei um copo."}
+{"frase": "他们明天不上课。", "pinying": "tāmen míngtiān bù shàngkè.", "tradução": "Eles não têm aula amanhã."}
+{"frase": "你的电脑太贵了。", "pinying": "nǐ de diànnǎo tài guì le.", "tradução": "O seu computador é caro demais."}
+{"frase": "那个饭店的包子很好吃。", "pinying": "nàge fàndiàn de bāozi hěn hǎochī.", "tradução": "O pão chinês no vapor daquele restaurante é muito gostoso."}
+{"frase": "我认识他的女朋友。", "pinying": "wǒ rènshi tā de nǚpéngyou.", "tradução": "Eu conheço a namorada dele."}
+{"frase": "对不起，我没有时间。", "pinying": "duìbuqǐ, wǒ méiyǒu shíjiān.", "tradução": "Desculpe, eu não tenho tempo."}
+{"frase": "没关系，我们明天见。", "pinying": "méi guānxi, wǒmen míngtiān jiàn.", "tradução": "Não tem problema, nos vemos amanhã."}
+{"frase": "你在找什么东西？", "pinying": "nǐ zài zhǎo shénme dōngxi?", "tradução": "O que você está procurando?"}
+{"frase": "他是一个小学生。", "pinying": "tā shì yí gè xiǎoxuéshēng.", "tradução": "Ele é um estudante do ensino fundamental."}
+{"frase": "你的书在桌子上。", "pinying": "nǐ de shū zài zhuōzi shàng.", "tradução": "O seu livro está em cima da mesa."}
+{"frase": "外边下雨了，天气很冷。", "pinying": "wàibian xià yǔ le, tiānqì hěn lěng.", "tradução": "Choveu lá fora, o tempo está muito frio."}
+{"frase": "妹妹喜欢吃苹果。", "pinying": "mèimei xǐhuan chī píngguǒ.", "tradução": "A irmã mais nova gosta de comer maçã."}
+{"frase": "这边有一个超市。", "pinying": "zhèbiān yǒu yí gè chāoshì.", "tradução": "Tem um supermercado aqui."}
+{"frase": "医生下午在医院工作。", "pinying": "yīshēng xiàwǔ zài yīyuàn gōngzuò.", "tradução": "O médico trabalha no hospital à tarde."}
+{"frase": "昨天我们去买东西了。", "pinying": "zuótiān wǒmen qù mǎi dōngxi le.", "tradução": "Ontem nós fomos fazer compras."}
+{"frase": "同学们在学习汉字。", "pinying": "tóngxuémen zài xuéxí Hànzì.", "tradução": "Os colegas de classe estão estudando caracteres chineses."}
+{"frase": "我爸爸是一个好先生。", "pinying": "wǒ bàba shì yí gè hǎo xiānsheng.", "tradução": "Meu pai é um bom senhor."}
+{"frase": "她的儿子今年八岁。", "pinying": "tā de érzi jīnnián bā suì.", "tradução": "O filho dela tem oito anos este ano."}
+{"frase": "你会唱中文歌吗？", "pinying": "nǐ huì chàng Zhōngwén gē ma?", "tradução": "Você sabe cantar músicas em chinês?"}
+{"frase": "那个商店卖电脑。", "pinying": "nàge shāngdiàn mài diànnǎo.", "tradução": "Aquela loja vende computadores."}
+{"frase": "我去书店买一本书。", "pinying": "wǒ qù shūdiàn mǎi yì běn shū.", "tradução": "Eu vou à livraria comprar um livro."}
+{"frase": "现在几点了？", "pinying": "xiànzài jǐ diǎn le?", "tradução": "Que horas são agora?"}
+{"frase": "我们坐出租车去公司。", "pinying": "wǒmen zuò chūzūchē qù gōngsī.", "tradução": "Nós vamos para a empresa de táxi."}
+{"frase": "谁在房间里说话？", "pinying": "shéi zài fángjiān lǐ shuōhuà?", "tradução": "Quem está conversando dentro do quarto?"}
+{"frase": "她买了一些鸡蛋和面包。", "pinying": "tā mǎi le yìxiē jīdàn hé miànbāo.", "tradução": "Ela comprou alguns ovos e pão."}
+{"frase": "今天是星期日。", "pinying": "jīntiān shì xīngqīrì.", "tradução": "Hoje é domingo."}
+{"frase": "那个狗很小。", "pinying": "nàge gǒu hěn xiǎo.", "tradução": "Aquele cachorro é muito pequeno."}
+{"frase": "我在打电话。", "pinying": "wǒ zài dǎ diànhuà.", "tradução": "Eu estou no telefone."}
+{"frase": "对不起，我没有看见你。", "pinying": "duìbuqǐ, wǒ méiyǒu kànjiàn nǐ.", "tradução": "Desculpe, eu não vi você."}
+{"frase": "我住在中国。", "pinying": "wǒ zhù zài Zhōngguó.", "tradução": "Eu moro na China."}
+{"frase": "那本书很好看。", "pinying": "nà běn shū hěn hǎokàn.", "tradução": "Aquele livro é muito bom de ler."}
+{"frase": "你今年几岁？", "pinying": "nǐ jīnnián jǐ suì?", "tradução": "Quantos anos você tem este ano?"}
+{"frase": "他是我的同学。", "pinying": "tā shì wǒ de tóngxué.", "tradução": "Ele é meu colega de classe."}
+{"frase": "我们喜欢吃饺子。", "pinying": "wǒmen xǐhuan chī jiǎozi.", "tradução": "Nós gostamos de comer bolinhos."}
+{"frase": "你觉得怎么样？", "pinying": "nǐ juéde zěnmeyàng?", "tradução": "O que você acha?"}
+{"frase": "学校在那边。", "pinying": "xuéxiào zài nàbiān.", "tradução": "A escola fica ali."}
+{"frase": "下雨了，不要去。", "pinying": "xià yǔ le, búyào qù.", "tradução": "Começou a chover, não vá."}
+{"frase": "请喝茶。", "pinying": "qǐng hē chá.", "tradução": "Por favor, beba chá."}
+{"frase": "你明天有时间吗？", "pinying": "nǐ míngtiān yǒu shíjiān ma?", "tradução": "Você tem tempo amanhã?"}
+{"frase": "她正在写汉字。", "pinying": "tā zhèngzài xiě Hànzì.", "tradução": "Ela está escrevendo caracteres chineses."}
+{"frase": "我们中午吃米饭。", "pinying": "wǒmen zhōngwǔ chī mǐfàn.", "tradução": "Nós comemos arroz ao meio-dia."}
+{"frase": "我听见了歌。", "pinying": "wǒ tīngjiàn le gē.", "tradução": "Eu ouvi a música."}
+{"frase": "妈妈去上班了。", "pinying": "māma qù shàngbān le.", "tradução": "A mãe foi trabalhar."}
+{"frase": "苹果很便宜。", "pinying": "píngguǒ hěn piányi.", "tradução": "A maçã é muito barata."}
+{"frase": "你叫什么名字？", "pinying": "nǐ jiào shénme míngzi?", "tradução": "Qual é o seu nome?"}
+{"frase": "谢谢你。", "pinying": "xièxie nǐ.", "tradução": "Obrigado."}
+{"frase": "哥哥会说汉语。", "pinying": "gēge huì shuō Hànyǔ.", "tradução": "O irmão mais velho sabe falar chinês."}
+{"frase": "大学里有很多学生。", "pinying": "dàxué lǐ yǒu hěn duō xuéshēng.", "tradução": "Na universidade tem muitos estudantes."}
+{"frase": "我坐飞机回家。", "pinying": "wǒ zuò fēijī huí jiā.", "tradução": "Eu vou para casa de avião."}
+{"frase": "这件衣服太大了。", "pinying": "zhè jiàn yīfu tài dà le.", "tradução": "Esta roupa é grande demais."}
+{"frase": "小朋友在玩。", "pinying": "xiǎopéngyǒu zài wán.", "tradução": "As crianças estão brincando."}
+{"frase": "我有点儿忙。", "pinying": "wǒ yǒudiǎnr máng.", "tradução": "Eu estou um pouco ocupado."}
+{"frase": "十点多了。", "pinying": "shí diǎn duō le.", "tradução": "Já passou das dez horas."}
+{"frase": "我们上午去了医院。", "pinying": "wǒmen shàngwǔ qù le yīyuàn.", "tradução": "Nós fomos ao hospital de manhã."}
+{"frase": "晚上好，我去睡觉。", "pinying": "wǎnshang hǎo, wǒ qù shuìjiào.", "tradução": "Boa noite, eu vou dormir."}

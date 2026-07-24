@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SRS Hanzi Manager</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#4f46e5">
+  <link rel="stylesheet" href="styles.css">
+  <!-- Ícones para navegadores e instalação -->
+  <link rel="icon" type="image/png" href="icon.png">
+  <link rel="apple-touch-icon" href="icon.png">
+
+  <!-- Manifesto PWA -->
+  <link rel="manifest" href="manifest.json">
+
+  <!-- Exibição para navegadores e dispositivos iOS/Safari -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <!-- SweetAlert2 CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+
+  <!-- Header Superior -->
+  <header class="app-header">
+    <div class="header-top">
+      <h1>SRS Hanzi</h1>
+      <div class="streak-badge">
+        <span class="fire-icon">🔥</span>
+        <span id="streakCount">0</span> dias
+      </div>
+    </div>
+    <div class="progress-container">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+    <div class="progress-text">
+      <span id="progressPercent">0%</span> concluído (<span id="studiedCount">0</span>/<span id="totalCount">0</span>)
+    </div>
+  </header>
+
+  <!-- Navegação de Abas -->
+  <nav class="nav-tabs">
+    <button class="tab-btn active" data-target="view-hoje">Revisão Hoje</button>
+    <button class="tab-btn" data-target="view-agenda">Agenda</button>
+    <button class="tab-btn" data-target="view-frases">Lista Mestre</button>
+    <button class="tab-btn" data-target="view-gerenciar">Gerenciar</button>
+  </nav>
+
+  <!-- Conteúdo do SPA -->
+  <main class="app-content">
+    
+    <!-- Tela 1: Hoje -->
+    <section id="view-hoje" class="tab-content active">
+      <h2>Revisões Pendentes para Hoje</h2>
+      <p class="subtitle">Clique na frase para testar seu conhecimento.</p>
+      <div id="hojeList" class="cards-grid"></div>
+    </section>
+
+    <!-- Tela 2: Agenda -->
+    <section id="view-agenda" class="tab-content">
+      <h2>Agenda de Próximas Revisões</h2>
+      <div id="agendaList" class="agenda-container"></div>
+    </section>
+
+    <!-- Tela 3: Lista de Frases Mestre -->
+    <section id="view-frases" class="tab-content">
+      <h2>Lista Mestre de Frases</h2>
+      
+      <!-- Seção: Frases Não Estudadas -->
+      <div class="mestre-section">
+        <h3 class="section-title">Frases Disponíveis</h3>
+        <p class="subtitle">Clique para adicionar à sua fila de estudos.</p>
+        <div id="frasesMestreNaoEstudadas" class="cards-grid"></div>
+      </div>
+
+      <hr class="divider" />
+
+      <!-- Seção: Frases Já Estudadas -->
+      <div class="mestre-section">
+        <h3 class="section-title">Frases Já Adicionadas</h3>
+        <p class="subtitle">Frases que você já colocou na sua rotina de revisões.</p>
+        <div id="frasesMestreEstudadas" class="cards-grid"></div>
+      </div>
+    </section>
+
+    <!-- Tela 4: Gerenciamento -->
+    <section id="view-gerenciar" class="tab-content">
+      <h2>Gerenciar e Exportar</h2>
+      <div class="manage-box">
+        <h3>Backup do Progresso</h3>
+        <p>Exporte seus dados em JSON para garantir a segurança dos seus estudos.</p>
+        <button id="btnExport" class="btn primary">Exportar Progresso (JSON)</button>
+        <button id="btnImport" class="btn secondary">Importar Progresso (JSON)</button>
+        <input type="file" id="importFileInput" accept=".json" style="display: none;">
+      </div>
+
+      <div class="manage-box danger-zone">
+        <h3>Zona de Perigo</h3>
+        <button id="btnReset" class="btn danger">Resetar Todo o Progresso</button>
+      </div>
+
+      <h3>Frases em Estudo (<span id="studyingCount">0</span>)</h3>
+      <div id="gerenciarList" class="cards-grid"></div>
+    </section>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
